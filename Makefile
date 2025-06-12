@@ -6,7 +6,7 @@ SRC := karatsuba_gen.cpp
 
 # Параметры по умолчанию
 DEFAULT_N := 16
-DEFAULT_B := 4
+DEFAULT_B := 3
 OUT_DIR := build
 
 .PHONY: all clean gen test help

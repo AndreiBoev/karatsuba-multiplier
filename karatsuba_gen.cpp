@@ -14,11 +14,22 @@ void generate_karatsuba_module(ofstream &out, int N, int base_case, set<int> &ge
 
     if (N <= base_case)
     {
-        out << "module karatsuba_" << N
-            << "(input  [" << (N - 1) << ":0] a,\n"
-            << "                   input  [" << (N - 1) << ":0] b,\n"
-            << "                   output [" << (2 * N - 1) << ":0] product);\n";
-        out << "  assign product = a * b;\n";
+        out << "module karatsuba_" << N << "(\n"
+            << "  input  [" << (N - 1) << ":0] a,\n"
+            << "  input  [" << (N - 1) << ":0] b,\n"
+            << "  output [" << (2 * N - 1) << ":0] product\n"
+            << ");\n";
+        out << "  integer i;\n";
+        out << "  reg [" << (2 * N - 1) << ":0] prod;\n";
+        out << "  always @(*) begin\n";
+        out << "    prod = 0;\n";
+        out << "    for (i = 0; i < " << N << "; i = i + 1) begin\n";
+        out << "      if (b[i]) begin\n";
+        out << "        prod = prod + (a << i);\n";
+        out << "      end\n";
+        out << "    end\n";
+        out << "  end\n";
+        out << "  assign product = prod;\n";
         out << "endmodule\n\n";
         return;
     }
@@ -152,7 +163,7 @@ void generate_testbench(ofstream &out, int N)
 int main(int argc, char *argv[])
 {
     int N = 16;               // разрядность по‑умолчанию
-    int base_case = 4;        // порог, после которого умножаем напрямую
+    int base_case = 3;        // порог, после которого умножаем напрямую
     string out_dir = "build"; // директория для сохранения результата
 
     // Парсинг аргументов
